@@ -45,3 +45,5 @@ Each utility will include its detailed instructions by calling.
 ```
 [graph_part|tri_part|compute_join_plan|patmat] --help
 ```
+
+The detailed format and structure for all input files can be found under the `patmat-run` repository.
