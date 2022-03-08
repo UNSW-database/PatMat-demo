@@ -29,16 +29,16 @@ graph_part <edge_file> <work_dir> <persist_data> <data_prefix> --sep <separator>
 ```
 
 
-`compute_join_plan`: Given a query, compute the join plan (execution plan) according to the algorithms. Currently, we include two supported schemes: BinaryJoin and GenericJoin (with BigJoin plan and CrystalJoin plan). The join plan needs to be computed before running `patmat` for the actual matching.
+`compute_join_plan`: Given a query formatted as a json file, compute the join plan (execution plan) according to the algorithms. An example query json file can be found under the `patmat-run` repository. Currently, we include two supported schemes: BinaryJoin and GenericJoin. The join plan needs to be computed before running `patmat`.
 
 ```
-compute_join_plan <name> <query> <scheme> <output_dir> <output_file> 
+compute_join_plan <name> <query> <GenericJoin|BinaryJoin> <output_dir> <output_file> 
 ```
 
-`patmat`: The main routine of doing pattern matching. While specifying the graph data and join plan (by `compute_join_plan`), we call the core pattern matching routine for the query. 
+`patmat`: The main routine of doing pattern matching. While specifying the graph data and join plan (by `compute_join_plan`), we call the core pattern matching routine for the query. The configeration of the graph needs to be stored as a json file and an example `graph_conf` file can be found under the `patmat-run` repository.
 
 ```
-patmat <plan> <graph_conf> <scheme> -n <machines> -w <workers> -p <machine_id> -h <host_file>
+patmat <plan> <graph_conf> <GenericJoin|BinaryJoin> -n <machines> -w <workers> -p <machine_id> -h <host_file>
 ```
 
 Each utility will include its detailed instructions by calling.
