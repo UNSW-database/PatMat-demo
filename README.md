@@ -7,15 +7,6 @@ Currently we adopt the most widely used the subgraph isomorphism semantics for s
 
 Our ultimate target is to support all use cases of Neo4j's [Cypher](https://neo4j.com/developer/cypher-query-language/) in the distributed (and/or streaming) context, for both offline query and online incremental query. 
 
-We refer to the following academic works for the core pattern matching component:
-
-* MultiwayJoin [1]: Propose one-round join via duplicating edges.
-* StarJoin [2]: Decompose the query graph into a set of stars, then enumerate matches for each star, and finally join all matched stars. 
-* TwinTwigJoin [3]: Optimising Star-Join via TwinTwig decomposition. Shown to be instance optimal over Star-Join.
-* CliqueJoin [4]: Optimising TT-Join by allowing decomposing the query into cliques and stars. Optimal solution in the paradigm of decomposition-and-join.
-* BiGJoin [5]: An implmentation of worst-case optimal join algorithm in Timely dataflow. 
-* CrystalJoin [6]: Use vertex cover to compress intermediate results.
-
 # The Basic Storage
 We introduce below a very basic storage designed for timely processing. The structure looks like:
 ```
@@ -29,20 +20,14 @@ work_dir
 Suppose we are now handling a dataset named "lj", and the working directory is "/tmp/work_dir", one will expect the graph data stored as `/tmp/work_dir/lj/DATA/<data_prefix>`, where `data_prefix` is the prefix of the partitioned data. Note that one machine can run multiple workers, and they share the same local copy.
 
 # Usage of the bins
-We have included four utilities in the project, namely graph partition (`graph_part`), triangle partition (`tri_part`), join plan computation (`compute_join_plan`) and pattern matching (`patmat`). 
+We have included four utilities in the project, namely graph partition (`graph_part`), join plan computation (`compute_join_plan`) and pattern matching (`patmat`). 
 
-`graph_part`: Hash partition the graph data. Specifically, a node and its neighbors will be randomly assigned to one worker in the cluster. Each machine, after collecting the owning nodes, will maintain them as a partitioned graph in its local storage (as indicated by `BasicStorage`). 
+`graph_part`: Hash partition the graph data. Specifically, graph_part takes as input a csv file containing the edges of the graph. Then each node and its neighbors will be randomly assigned to one worker in the cluster. Each machine, after collecting the owning nodes, will maintain them as a partitioned graph in its local storage (as indicated by `BasicStorage`).  
 
-`tri_part`: The triangle partition introduced in [3]. Basically, given three nodes v, v1, v2 where v1, v2 are v's neighbors, if (v1, v2) is also an edge of the graph, it will be included into v's partitioned graph.
-
-`compute_join_plan`: Given a query, compute the join plan (execution plan) according to the algorithms. Currently, we include two supported schemes: BinaryJoin and GenericJoin (with BigJoin plan and CrystalJoin plan).
+`compute_join_plan`: Given a query, compute the join plan (execution plan) according to the algorithms. Currently, we include two supported schemes: BinaryJoin and GenericJoin (with BigJoin plan and CrystalJoin plan). The join plan needs to be computed before running the patmat bin for the actual matching.
 
 `patmat`: The main routine of doing pattern matching. While specifying the graph data and join plan (by `compute_join_plan`), we call the core pattern matching routine for the query. 
 
-Compile each utility using:
-```
-cargo build --release --bin [graph_part|tri_part|compute_join_plan|patmat]
-```
 
 Each utility will include its own instructions by calling.
 ```
