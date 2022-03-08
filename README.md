@@ -48,20 +48,3 @@ Each utility will include its own instructions by calling.
 ```
 [graph_part|tri_part|compute_join_plan|patmat] --help
 ```
-
-# Version Map.
-V0.1 Support isomorphism-based subgraph matching for simple labelled graph. The simple labelled graph, there is only one edge between two nodes, and self-loop is not allowed. The only properties of a node (and edge), is a globally unique id and a label (type). 
-
-V0.2 Support [property graph](https://neo4j.com/developer/graph-database/). We will implement a full functional property graph based on [RockDB](https://github.com/facebook/rocksdb).
-
-V0.2.5 PatMat Demo. A demo site of the system.
-
-V0.3 Incremental query support. 
- 
-# References
-1. Enumerating subgraph instances using map-reduce, Afrati et al., ICDE 2013.
-2. Efficient subgraph matching on billion node graphs, Sun et al., VLDB 2012.
-3. Scalable subgraph enumeration in MapReduce: a cost-oriented approach, Lai et al., VLDBJ 2017.
-4. Scalable distributed subgraph enumeration, Lai et al., VLDB 2017.
-5. Distributed Evaluation of Subgraph Queries Using Worst-case Optimal Low-Memory Dataflows, Frank et al, VLDB 2018.
-6. Subgraph Matching: on compression and Computation, Miao et al, VLDB 2018.
