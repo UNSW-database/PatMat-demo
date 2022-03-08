@@ -22,14 +22,26 @@ Suppose we are now handling a dataset named "lj", and the working directory is "
 # Usage of the bins
 We have included four utilities in the project, namely graph partition (`graph_part`), join plan computation (`compute_join_plan`) and pattern matching (`patmat`). 
 
-`graph_part`: Hash partition the graph data. Specifically, graph_part takes as input a csv file containing the edges of the graph. Then each node and its neighbors will be randomly assigned to one worker in the cluster. Each machine, after collecting the owning nodes, will maintain them as a partitioned graph in its local storage (as indicated by `BasicStorage`).  
+`graph_part`: Hash partition the graph data. Specifically, `graph_part` takes as input a csv file containing the edges of the graph. Then each node and its neighbors will be randomly assigned to one worker in the cluster. Each machine, after collecting the owning nodes, will maintain them as a partitioned graph in its local storage (as indicated by `BasicStorage`).  
 
-`compute_join_plan`: Given a query, compute the join plan (execution plan) according to the algorithms. Currently, we include two supported schemes: BinaryJoin and GenericJoin (with BigJoin plan and CrystalJoin plan). The join plan needs to be computed before running the patmat bin for the actual matching.
+```
+graph_part <edge_file> <work_dir> <persist_data> <data_prefix> --sep <separator> -n <machines> -w <workers> -p <machine_id> -h <host_file>
+```
+
+
+`compute_join_plan`: Given a query, compute the join plan (execution plan) according to the algorithms. Currently, we include two supported schemes: BinaryJoin and GenericJoin (with BigJoin plan and CrystalJoin plan). The join plan needs to be computed before running `patmat` for the actual matching.
+
+```
+compute_join_plan <name> <query> <scheme> <output_dir> <output_file> 
+```
 
 `patmat`: The main routine of doing pattern matching. While specifying the graph data and join plan (by `compute_join_plan`), we call the core pattern matching routine for the query. 
 
+```
+patmat <plan> <graph_conf> <scheme> -n <machines> -w <workers> -p <machine_id> -h <host_file>
+```
 
-Each utility will include its own instructions by calling.
+Each utility will include its detailed instructions by calling.
 ```
 [graph_part|tri_part|compute_join_plan|patmat] --help
 ```
